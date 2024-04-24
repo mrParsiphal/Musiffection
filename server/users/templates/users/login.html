@@ -1,0 +1,17 @@
+{% extends 'users/SignLayout.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+    <div class="registration_window">
+        <h2>Вход</h2>
+        <form method="POST">
+                {% csrf_token %}
+            <table>
+                {{ forms }}
+            </table>
+            <input id="button" type="submit" value="Send" >
+        </form>
+        <a href="{% url 'registration' %}">Регистрация<a/>
+    </div>
+{% endblock %}

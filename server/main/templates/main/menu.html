@@ -1,0 +1,25 @@
+{% load static %}
+<div class="menu">
+    <div class="menu_horizontal">
+        <a href="{% url 'player' %}"><div class="button_background"><img src="{% static 'main/img/menu_button.svg' %}" alt="menu_button" class="button"></div></a>
+        <div class="content_blackout"></div>
+        <a href="{% url 'main' %}">
+            <div class="logo_menu">
+                <div class="menu_path_1">
+                    <img src="{% static 'main/img/Ellipse 1.svg' %}" alt="logo_1" class="logo_path_1">
+                    <img src="{% static 'main/img/Polygon 1.svg' %}" alt="logo_2" class="logo_path_2">
+                </div>
+            </div>
+        </a>
+        <a href="{% url 'login' %}">
+            <div class="avatar_cell">
+                <img src="{% static avatar %}" alt="avatar" id="avatar" class="avatar">
+            </div>
+        </a>
+        <div class="search">
+            <img src="{% static 'main/img/search_icon.svg' %}" class="search_icon">
+        </div>
+        <audio controls src="" id="audio" class="player_control"></audio>
+        <img src="{% static 'main/img/open_button.svg' %}" alt="open_button" id="open_button" class="open_button">
+    </div>
+</div>

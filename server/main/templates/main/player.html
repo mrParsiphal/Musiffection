@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="{% static 'main/css/player.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'main/css/menu.css' %}">
+    {{ musics|json_script:"musics-data" }}
+    <link rel="icon" href="{% static 'main/img/logo.png' %}">
+    <title id="title">Player: {{ first_music.name }}</title>
+</head>
+<body>
+    <div class="ulbackimg">
+        <div class="li1"><img src="{% static 'main/img/background_2.jpg' %}" alt="background_1" class="backimg"></div>
+    </div>
+    {% include 'main/menu.html' %}
+    <div class="content">
+        <div class="player_block">
+            <div class="music_info">
+                <div class="meta_info">
+                    <h4 class="text" id="current_time">current_time: 0</h4>
+                    <h4 class="text" id="auditions">auditions: {{ first_music.auditions }}</h4>
+                    <h4 class="text" id="rating_counter">rating: {{ first_music.rating }}</h4>
+                </div>
+                <div class="img_block">
+                    <img class="music_img" id="music_img" src="{% static first_music.img_path %}" onerror='this.src="{% static 'main/img/music_1.jpg' %}"'>
+                </div>
+            </div>
+            <div class="music_buttons">
+                <div class="navigation" id="navigation">
+                    <div class="buffered" id="buffered">
+                        <div class="progress">
+                            <span id="progress-amount"></span>
+                            <span class="progress-click" id="progress-click"></span>
+                        </div>
+                    </div>
+                    <img class="lastb" id="last" src="{% static 'main/img/player_lastb.svg' %}">
+                    <img class="playb" id="play" src="{% static 'main/img/player_playb.svg' %}">
+                    <img class="pauseb" id="pause" src="{% static 'main/img/player_pauseb.svg' %}">
+                    <img class="nextb" id="next" src="{% static 'main/img/player_nextb.svg' %}">
+                    <img class="volumeb" id="volume" src="{% static 'main/img/player_volumeb.svg' %}">
+                    <img class="like" id="like" src="{% static 'main/img/Temp_like.png' %}">
+                </div>
+            <h3 class="current_music_name" id="music_name">Трек: {{ first_music.name }}</h3>
+            <h4 class="current_music_author" id="music_author">Исполнитель: {{ first_music.author }}</h4>
+            </div>
+        </div>
+        <div class="playlist">
+            <div class="playlist_menu">
+                <h4>Плейлист на тему песни: {{ first_music.name }}</h4>
+            </div>
+            {% for position, music in musics.items %}
+                {% include 'main/music_li.html'|safe %}
+            {% endfor %}
+        </div>
+    </div>
+<script>{% include 'main/scripts/player_js.html' %}</script>
+</body>
+</html>

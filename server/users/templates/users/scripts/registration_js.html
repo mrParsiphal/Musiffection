@@ -1,0 +1,11 @@
+{% load static %}
+
+const button = document.getElementById("button");
+
+button.addEventListener('click', function () {
+		if (audio.muted == '') {
+			audio.muted = 'muted';
+		} else {
+			audio.muted = '';
+		}
+	});

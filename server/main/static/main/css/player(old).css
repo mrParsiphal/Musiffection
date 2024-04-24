@@ -1,0 +1,247 @@
+body {
+    height: calc(100vh - 80px);
+    -webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+
+.ulbackimg{
+    top: 70px;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: calc(100vh - 70px);
+    position: absolute;
+    overflow:hidden;
+    z-index: -1;
+}
+.backimg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+}
+
+
+.content {
+    margin-top: 70px;
+    margin-left: -2vw;
+    display: flex;
+    width: 101vw;
+    height: calc(100vh - 70px)
+}
+.player_block {
+    width: 70vw;
+    height: calc(95vh - 70px)
+}
+.music_info{
+    width: 70vw;
+    height: 75vh;
+    display: flex;
+}
+.meta_info {
+    width: 15vw;
+    height: 75vh;
+    display: block;
+    background-color: #C17F07;
+    opacity: .8;
+}
+.img_block {
+    width: 55vw;
+    height: 75vh;
+    display: flex;
+    background-color: #000000;
+    position: relative;
+    overflow:hidden;
+}
+.music_img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 450px;
+    height: 450px;
+    object-fit: cover;
+}
+.music_buttons {
+    width: 70vw;
+    height: calc(25vh - 70px);
+    background-color: #E37400;
+    opacity: 1;
+}
+.navigation {
+    margin-top: 50px;
+    margin-left: 25vw;
+    position: absolute;
+    width: 40vw;
+    height: 11vh;
+    background-color: #FFCCFF;
+    border-radius: 10px;
+}
+.current_music_name {
+    margin-top: 5px;
+    margin-bottom: 0;
+    margin-left: 5vw;
+    position: absolute;
+}
+.current_music_author {
+    margin-top: 30px;
+    margin-left: 5vw;
+    position: absolute;
+}
+.buffered {
+    height: 20px;
+    width: 40vw;
+    position: relative;
+    background: #555;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.progress {
+    height: 20px;
+    position: relative;
+    width: 40vw;
+}
+#progress-amount {
+    display: block;
+    height: 100%;
+    background-color: #595;
+    width: 0;
+}
+.progress-click {
+    margin-top: -20px;
+    display: block;
+    position: absolute;
+    height: 100%;
+    background-color: #595;
+    width: 100%;
+    opacity: 0;
+}
+.playb {
+    visibility: visible;
+    margin-left: 25px;
+    width: 50px;
+    height: 50px;
+}
+.pauseb {
+    visibility: collapse;
+    position: absolute;
+    margin-top: 10px;
+    margin-left: -55px;
+    width: 50px;
+    height: 50px;
+}
+.lastb {
+    margin-left: 10vw;
+    width: 50px;
+    height: 50px;
+}
+.nextb {
+    margin-left: 25px;
+    width: 50px;
+    height: 50px;
+}
+.volumeb {
+    margin-top: 35px;
+    margin-left: 25px;
+    width: 25px;
+    height: 25px;
+}
+.playlist {
+    width: 33.5vw;
+    height: calc(100vh - 70px);
+    background-color: #E37400;
+    opacity: .95;
+    overflow: scroll;
+}
+.playlist::-webkit-scrollbar {
+    width: 12px;
+    height: 0px;
+}
+.playlist::-webkit-scrollbar-thumb {
+    width: 5px;
+    height: 5px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #49678D, #395778);
+}
+.playlist::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #EBC100, #FF4D00);
+}
+.playlist_menu {
+    margin-top: -15px;
+    margin-left: 5px;
+    width: 29.5vw;
+    height: 200px;
+    background-color: #BE7A00;
+    border-radius: 10px;
+}
+.player {
+    margin-top: 5px;
+    margin-left: 10vw;
+    width: 60vw;
+}
+
+
+.music_li {
+    margin-top: 3px;
+    margin-left: 5px;
+    width: 29.5vw;
+    height: 50px;
+    background-color: #E35E00;
+    border-radius: 22px;
+}
+.img_music_box {
+    top: 2px;
+    left: 2px;
+    width: 45px;
+    height: 45px;
+    border-radius: 25px;
+    position: relative;
+    overflow:hidden;
+}
+.img_music_li {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
+}
+.music_li_name {
+    width: 18vw;
+    margin-top: -40px;
+    margin-left: 15%;
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.music_li_author {
+    margin-top: 4px;
+    margin-left: 15%;
+    width: 18vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.music_li_duration {
+    float: right;
+    margin-top: -60px;
+    margin-right: 20px;
+}
+
+
+
+.text {
+    margin-left: 20px;
+    margin-top: 100px;
+    height: 40px;
+}

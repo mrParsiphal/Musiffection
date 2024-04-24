@@ -1,0 +1,11 @@
+{% load static %}
+<li class="track_cell cell_{{ i.name }}">
+    <div class="track_cell_selected" id="track_{{ i.serial_number }}">
+        <span class="track_id" id="track_id_{{ i.serial_number }}">{{ i.id }}</span>
+        <img src="{% static 'main/img/play_cell.svg' %}" alt="play" class="play_icon">
+    </div>
+    <div class="track_info">
+        <div class="img_cell"><img src="{% static i.img %}" alt="track_img" class="track_img" onerror='this.src="{% static 'main/img/music_1.jpg' %}"'></div>
+        <div class="track_title"><h4 class="TTT">{{ i.name }} {{ i.author }}</h4></div>
+    </div>
+</li>

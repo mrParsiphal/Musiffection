@@ -1,0 +1,264 @@
+{% load static %}
+    let current_position = 0;
+	var number_position = new String;
+	var time_check_once = false;
+	var musics
+	var len_musics
+
+    const url = window.location.href;
+
+	const csrf = '{{ csrf_token }}'
+    const play = document.getElementById("play");
+	const pause = document.getElementById("pause");
+	const audio = document.getElementById("audio");
+	const music_img = document.getElementById("music_img");
+	const title = document.getElementById("title");
+	const last = document.getElementById("last");
+	const next = document.getElementById("next");
+	const buffered = document.getElementById("buffered");
+	const navigation = document.getElementById("navigation");
+	const progress_amount = document.getElementById("progress-amount");
+	const progress_click = document.getElementById("progress-click");
+	const volume = document.getElementById("volume");
+	const current_music_name = document.getElementById("music_name");
+	const current_music_author = document.getElementById("music_author");
+    const current_time = document.getElementById("current_time");
+    const current_buffer = document.getElementById("current_buffer");
+	const auditions = document.getElementById("auditions");
+	const like = document.getElementById("like");
+	const rating_text = document.getElementById("rating_text");
+    const body = document.getElementById("body");
+    const open_player_button = document.getElementById("open_button");
+    const player_content = document.getElementById("player_content");
+	const playlist = document.getElementById("playlist");
+
+    audio.volume = 0.04;
+    const time_check = 40;
+
+
+    async function Load_music(music_id) {
+		let response = await fetch("/player?m=" + music_id, {
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': csrf,
+			},
+			body: '',
+		});
+		musics = await response.json();
+		len_musics = musics.length;
+
+
+
+		audio.src = "/static/musics/" + musics.track_0.file;
+		music_img.src = "/static/" + musics.track_0.img;
+		title.text = "Musiffection: " + musics.track_0.name;
+		current_music_name.textContent = 'Трек: ' + musics.track_0.name;
+		current_music_author.textContent = 'Исполнитель: ' + musics.track_0.author;
+		rating_counter.textContent = 'rating: ' + musics.track_0.rating;
+		playlist.scrollTo(0, 0);
+
+		for (let i = 0; i < len_musics; i++) {
+			document.getElementById("number_" + i).style.background = '#E35E00';
+			document.getElementById("music_li_img_" + i).src = "/static/" + musics["track_" + i].img;
+			document.getElementById("music_li_name_" + i).textContent = musics["track_" + i].name;
+			document.getElementById("music_li_author_" + i).textContent = musics["track_" + i].author;
+			document.getElementById("music_li_duration_" + i).textContent = musics["track_" + i].duration;
+		}
+		document.getElementById("number_0").style.background = '#00648F';
+		body.style.overflow = 'hidden';
+        history.pushState(null, null, 'player');
+        player_content.style.visibility = 'visible';
+		player_content.style.opacity = '1';
+		current_position = 0;
+		audio.play();
+	};
+
+    async function change_player_visibility() {
+        if (player_content.style.visibility == 'collapse') {
+            history.pushState(null, null, 'player');
+			player_content.style.opacity = '1';
+            player_content.style.visibility = 'visible';
+            body.style.overflow = 'hidden';
+        } else {
+			player_content.style.opacity = '0';
+			setTimeout(function() {player_content.style.visibility = 'collapse'; history.back();}, 400);
+            body.style.overflow = 'visible';
+        };
+    };
+
+    open_player_button.addEventListener('mouseup', function () {
+        change_player_visibility();
+	});
+
+    window.onload = function () {
+		document.getElementById("number_0").style.background = '#FF2B2B';
+        audio.addEventListener("timeupdate", function () {
+            var duration = audio.duration;
+            if (duration > 0 && !audio.paused) {
+				let percent_duration = Math.round((audio.currentTime / duration) * 100)
+                current_time.textContent = 'current_time: ' + percent_duration + "%";
+				if ((percent_duration == time_check) && (time_check_once == false)) {
+					Set_audition(current_position);
+					time_check_once = true;
+				};
+                progress_amount.style.width = (audio.currentTime / duration) * 100 + "%";
+            }
+        });
+    };
+
+	progress_click.onmousedown = function (e) {
+		let audio_PP = audio.paused;
+		audio.pause();
+
+		function onMouseMove(e) {
+    		let x = e.pageX - navigation.offsetLeft;
+			if (x <= buffered.offsetWidth) {
+				progress_amount.style.width = x / (buffered.offsetWidth / 100) + "%";
+				var duration = audio.duration;
+
+				let set_time = (audio.duration / 100) * ((e.pageX - navigation.offsetLeft) / (buffered.offsetWidth / 100));
+				if (set_time <= 0) {
+					audio.currentTime = 0;
+					current_time.textContent = 'current_time: ' + 0 + "%";
+				}
+				else if (set_time >= audio.duration) {audio.currentTime = audio.duration;}
+				else {
+					audio.currentTime = set_time;
+					current_time.textContent = 'current_time: ' + Math.round((e.pageX - navigation.offsetLeft) / ((buffered.offsetWidth) / 100)) + "%";
+				};
+			}
+  		}
+
+		document.addEventListener('mousemove',  onMouseMove);
+		onMouseMove(e);
+		document.onmouseup = function (e) {
+			document.removeEventListener('mousemove', onMouseMove);
+			let set_time = (audio.duration / 100) * ((e.pageX - navigation.offsetLeft) / (buffered.offsetWidth / 100));
+			if (set_time <= 0) {audio.currentTime = 0;}
+			else if (set_time >= audio.duration) {audio.currentTime = audio.duration;}
+			else {audio.currentTime = set_time;};
+			progress_click.onmouseup = null;
+			document.onmouseup = null;
+			if (!audio_PP) {
+				audio.play();
+			};
+		};
+	};
+	progress_click.ondragstart = function() {
+  		return false;
+	};
+
+	audio.addEventListener('play', function () {
+		pause.style.visibility = 'inherit';
+		play.style.visibility = 'collapse';
+	});
+
+	audio.addEventListener('pause', function () {
+		play.style.visibility = 'inherit';
+		pause.style.visibility = 'collapse';
+	});
+
+	play.addEventListener('mouseup', function () {
+		audio.play();
+	});
+
+	pause.addEventListener('mouseup', function () {
+		audio.pause();
+	});
+
+	volume.addEventListener('click', function () {
+		if (audio.muted == '') {
+			audio.muted = 'muted';
+		} else {
+			audio.muted = '';
+		}
+	});
+
+	next.addEventListener('click', function () {
+		number_position = Number(current_position) + 1;
+		if (number_position < window.len_musics) {
+			change_music(String(number_position));
+		}
+	});
+
+	last.addEventListener('click', function () {
+		number_position = Number(current_position) - 1;
+		if (number_position > -1) {
+			change_music(String(number_position));
+		}
+	});
+
+	audio.onended = function() {
+		number_position = Number(current_position) + 1;
+		if (number_position < len_musics) {
+			change_music(number_position);
+		}
+	}
+
+	async function Set_audition(current_position) {
+		let response = await fetch("/player/mark audition", {
+			method: 'POST',
+			headers: {
+				'music-id': musics["track_" + current_position].id,
+				'X-CSRFToken': csrf,
+			},
+			body: '',
+		});
+	}
+
+	async function Set_rating(current_position, rating) {
+		let response = await fetch("/player/like", {
+			method: 'POST',
+			headers: {
+				'music-id': musics["track_" + current_position].id,
+				'X-CSRFToken': csrf,
+				'rating': rating,
+			},
+			body: '',
+		});
+		let result = await response.json();
+		musics[current_position].rating = result.rating;
+		rating_counter.textContent = 'rating: ' + result.rating;
+	}
+
+	like.addEventListener('click', function () {
+		Set_rating(current_position, true);
+	});
+
+	async function Set_quantity_auditions(position) {
+		let response = await fetch("/player/auditions", {
+			method: 'POST',
+			headers: {
+				'music-id': musics["track_" + position].id,
+				'X-CSRFToken': csrf,
+			},
+			body: '',
+		});
+		let result = await response.json();
+		auditions.textContent = 'auditions: ' + result.auditions;
+	}
+
+	async function change_music(position) {
+		document.getElementById("number_" + current_position).style.background = '#9D7430';
+		document.getElementById("number_" + position).style.background = '#00648F';
+		audio.src = "/static/musics/" + musics["track_" + position].file;
+		music_img.src = "/static/" + musics["track_" + position].img;
+		title.text = "Musiffection: " + musics["track_" + position].name;
+		current_music_name.textContent = 'Трек: ' + musics["track_" + position].name;
+		current_music_author.textContent = 'Исполнитель: ' + musics["track_" + position].author;
+		rating_counter.textContent = 'rating: ' + musics["track_" + position].rating;
+		current_position = position;
+		Set_quantity_auditions(position);
+		time_check_once = false;
+		audio.play();
+	}
+
+{% for position in quantity_musics %}
+	const music_{{ position }} = document.getElementById("number_{{ position }}");
+	music_{{ position }}.addEventListener('click', () => change_music('{{ position }}'));
+{% endfor %}
+
+{% for track_cell in quantity_track_cells %}
+	const track_{{ track_cell }} = document.getElementById("track_{{ track_cell }}");
+	track_{{ track_cell }}.addEventListener('click', () => Load_music(document.getElementById("track_id_{{ track_cell }}").textContent));
+{% endfor %}

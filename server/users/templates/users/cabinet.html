@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="{% static 'main/css/menu.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'users/css/cabinet.css' %}">
+    <link rel="icon" href="{% static 'main/img/logo.png' %}">
+    <title>Личный кабинет</title>
+</head>
+<body>
+    <div class="ulbackimg">
+        <div class="li1"><img src="{% static 'main/img/background_2.jpg' %}" alt="background_1" class="backimg"></div>
+    </div>
+    {% include 'main/menu.html' %}
+    <div class="content">
+        <img src="{% static avatar %}" alt="avatar" id="user_avatar" class="user_avatar">
+        <h4 class="1">Отображаемое имя: {{ name }}</h4>
+        <h4 class="1">Логин: {{ login }}</h4>
+        <h4 class="1">Хеш пароля (тест): {{ password }}</h4>
+        <h4 class="1">Наличие авторства: {{ authorship }}</h4>
+        <h4 class="1">Дата создания аккаунта: {{ date_joined }}</h4>
+    </div>
+</body>
+</html>

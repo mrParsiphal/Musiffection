@@ -1,0 +1,12 @@
+{% load static %}
+
+<div class="music_li player_text" id="number_{{ position }}">
+  <div class="img_music_box">
+    <img class="music_li_img" src="" id="music_li_img_{{ position }}" onerror='this.src="{% static 'main/img/music_1.jpg' %}"'>
+  </div>
+  <div class="text_info">
+    <h4 class="music_li_name player_text" id="music_li_name_{{ position }}"></h4>
+    <h5 class="music_li_author player_text" id="music_li_author_{{ position }}"></h5>
+  </div>
+  <h5 class="music_li_duration player_text" id="music_li_duration_{{ position }}"></h5>
+</div>

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    volumes:
+      - ./server/staticfiles/:/staticfiles
+      - ./nginx_logs/:/var/log/nginx
+    ports:
+      - 80:8000
+    expose:
+      - 5532
+    depends_on:
+      - web
+  web:
+    container_name: django
+    build: ./server
+    volumes:
+      - ./server/:/server/
+    working_dir: /server
+    command: gunicorn -b 0.0.0.0:5532 server.wsgi:application
+    expose:
+      - 5532
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    container_name: mysql
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./dbdata:/var/lib/mysql
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports: ['3306']
+    environment:
+      MYSQL_DATABASE: 'test'
+      MYSQL_ROOT_PASSWORD: 'zaxer0'
+      HOST_CACHE_SIZE: '0'

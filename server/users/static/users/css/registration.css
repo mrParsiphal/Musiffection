@@ -1,0 +1,13 @@
+body {
+    background-color: #E35E00;
+}
+
+.registration_window {
+    margin-top: 15vh;
+    margin-left: 30vw;
+    padding: 20px;
+    width: 40vw;
+    background-color: #E37400;
+    border-radius: 25px;
+}
+
