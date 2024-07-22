@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Ip, Musics, Ip_and_Musics, Genres, Tegs
+from .models import IpModel, MusicModel, AuditionModel, GenreModel, TegModel
 from django.utils.safestring import mark_safe
 
 
-@admin.register(Musics)
+@admin.register(MusicModel)
 class MusicsBAdmin(admin.ModelAdmin):
     list_display = [
         'name',
@@ -17,6 +17,7 @@ class MusicsBAdmin(admin.ModelAdmin):
         'id',
         'name',
         'author',
+        'owner',
         'duration',
         'file',
         'text',
@@ -39,7 +40,7 @@ class MusicsBAdmin(admin.ModelAdmin):
     preview.short_description = "Изображение"
 
 
-@admin.register(Genres)
+@admin.register(GenreModel)
 class GenresBAdmin(admin.ModelAdmin):
     list_display = [
         'genre',
@@ -54,6 +55,6 @@ class GenresBAdmin(admin.ModelAdmin):
     filter_horizontal = []
 
 
-admin.site.register(Ip)
-admin.site.register(Tegs)
-admin.site.register(Ip_and_Musics)
+admin.site.register(IpModel)
+admin.site.register(TegModel)
+admin.site.register(AuditionModel)

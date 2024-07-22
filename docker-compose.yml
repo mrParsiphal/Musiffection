@@ -36,5 +36,5 @@ services:
     ports: ['3306']
     environment:
       MYSQL_DATABASE: 'test'
-      MYSQL_ROOT_PASSWORD: 'zaxer0'
+      MYSQL_ROOT_PASSWORD: 'django-test'
       HOST_CACHE_SIZE: '0'

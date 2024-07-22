@@ -19,7 +19,7 @@ def login():
         database = input('Введите название БД: ')
         user = input('Введите пользователя: ')
         password = input('Введите пароль: ')
-    table = 'main_Musics'
+    table = 'main_MusicModel'
     db = MySQLdb.connect(
         host=host,
         user=user,
@@ -40,13 +40,17 @@ def show_tables(cur):
 
 def load_music(db, cur, table):
     musics_path = input('Введите путь к файлам: ')
+    print(italic('Сбор данных для запроса...'))
     if musics_path in '':
         musics_path = '../musics files/musics/'
     music_img_path = '../musics files/music img/'
     set_files = set(os.listdir(musics_path))
+    print(set_files)
     cur.execute(f'''SELECT file FROM {table}''')
     set_db = set([i[0] for i in cur.fetchall()])
+    print(set_db)
     set_files.difference_update(set_db)
+    print(set_files)
     cur.execute(f'''SELECT MAX(id) FROM {table}''')
     music_id = cur.fetchall()[0][0]
     if music_id == None:
@@ -72,14 +76,14 @@ def load_music(db, cur, table):
                 sec_dur = mutagen_data.info.length
                 duration = f'{int(sec_dur // 60)}'.rjust(2, '0') + ':' + f'{int(sec_dur % 60)}'.rjust(2, '0')
                 sql_request_data.append(
-                    f'''("{music_id}", "{music_name}", "{music}", "{img_path}", "{author}", "{duration}", 0, 0, SYSDATE())''')
+                    f'''("{music_id}", "{music_name}", "{music}", "{img_path}", "{author}", "{duration}", null, 0, 0, SYSDATE())''')
             else:
                 print(yellow(music))
                 quantity_incorrect_tracks += 1
         if len(sql_request_data) != 0:
             try:
                 print(italic('Запрос подготовлен. Отправка запроса...'))
-                sql_request = f'''INSERT INTO {table} (id, name, file, img, author, duration, auditions, rating, date) VALUES ''' + ', '.join(
+                sql_request = f'''INSERT INTO {table} (id, name, file, img, author, duration, owner_id, auditions, rating, date) VALUES ''' + ', '.join(
                     sql_request_data)
                 cur.execute(sql_request)
                 db.commit()

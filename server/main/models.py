@@ -1,7 +1,8 @@
 from django.db import models
+from users.models import UserProfile
 
 
-class Genres(models.Model):
+class GenreModel(models.Model):
     genre = models.CharField(max_length=50, unique=True, verbose_name='Жанр')
     date = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления записи')
 
@@ -12,9 +13,9 @@ class Genres(models.Model):
         verbose_name_plural = 'Жанры'
 
 
-class Tegs(models.Model):
+class TegModel(models.Model):
     teg = models.CharField(max_length=15, unique=True, verbose_name='Название тега')
-    creator = models.CharField(max_length=15, unique=True, verbose_name='Создатель тега')
+    creator = models.CharField(max_length=15, verbose_name='Создатель тега')
     date = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления записи')
 
     def __str__(self):
@@ -24,15 +25,16 @@ class Tegs(models.Model):
         verbose_name_plural = 'Теги'
 
 
-class Musics(models.Model):
+class MusicModel(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
-    file = models.CharField(max_length=100, verbose_name='Название музыкального файла')
+    file = models.FileField(upload_to='./musics files/musics', max_length=100, verbose_name='Название музыкального файла')
     img = models.ImageField(upload_to='./musics files/music img', default='main/img/music_1.jpg', max_length=100, verbose_name='Изображение', null=True, blank=True)
     author = models.CharField(default='неизвестен', max_length=100, verbose_name='Автор')
-    text = models.TextField(default='Ещё ни кто не добавил слова песни', verbose_name='Слова песни', null=True, blank=True)
+    owner = models.ForeignKey(UserProfile, verbose_name='Владелец', on_delete=models.SET_NULL, null=True, blank=True)
+    text = models.TextField(default=None, verbose_name='Слова песни', null=True, blank=True)
     duration = models.CharField(max_length=7, verbose_name='Длительность')
-    tegs = models.ManyToManyField(Tegs, verbose_name='Теги', blank=True)
-    genres = models.ManyToManyField(Genres, verbose_name='жанры', blank=True)
+    tegs = models.ManyToManyField(TegModel, verbose_name='Теги', blank=True)
+    genres = models.ManyToManyField(GenreModel, verbose_name='жанры', blank=True)
     rating = models.IntegerField(default=0, verbose_name='Репутация')
     auditions = models.IntegerField(default=0, verbose_name='Количество прослушиваний')
     date = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления')
@@ -44,7 +46,7 @@ class Musics(models.Model):
         verbose_name_plural = 'Музыка'
 
 
-class Ip(models.Model):
+class IpModel(models.Model):
     ip = models.CharField(max_length=15, unique=True, verbose_name='Ip адресс')
     date = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления записи')
 
@@ -55,11 +57,11 @@ class Ip(models.Model):
         verbose_name_plural = 'Ip'
 
 
-class Ip_and_Musics(models.Model):
-    ip = models.ForeignKey(Ip, on_delete=models.CASCADE, verbose_name='Ip адресс который прослушал музыку')
-    music_id = models.ForeignKey(Musics, db_index=True, on_delete=models.CASCADE, verbose_name='Id прослушанной музыки')
+class AuditionModel(models.Model):
+    ip = models.ForeignKey(IpModel, on_delete=models.CASCADE, verbose_name='Ip адресс который прослушал музыку')
+    music_id = models.ForeignKey(MusicModel, db_index=True, on_delete=models.CASCADE, verbose_name='Id прослушанной музыки')
     attitude = models.BooleanField(verbose_name='Отношение', null=True, blank=True)
-    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления записи')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления записи', blank=True)
 
     # def save(self, *args, **kwargs):
     #     if not Invite_code_bindings.objects.filter(user_invite_code=self.user_invite_code,
@@ -73,7 +75,7 @@ class Ip_and_Musics(models.Model):
         verbose_name_plural = 'Прослушивания'
 
 
-class Authors(models.Model):
+class AuthorModel(models.Model):
     author_id = models.IntegerField(verbose_name='Id', unique=True)
     author = models.CharField(max_length=15, verbose_name='Автор')
     rating = models.IntegerField(default=0, verbose_name='Репутация')

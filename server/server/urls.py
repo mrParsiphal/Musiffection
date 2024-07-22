@@ -15,23 +15,32 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib import admin
+from django.urls import path, include
+
+from rest_framework import routers
 from main import views as main
 from users import views as cabinet
-from django.contrib import admin
-from django.urls import path
+
+
+musicRouter = routers.SimpleRouter()
+musicRouter.register(r'music', main.MusicAPIView)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main.Index, name='main'),
-    path('player/auditions', main.Auditions, name='auditions'),
-    path('player/like', main.Like, name='like'),
-    path('player/mark audition', main.Mark_audition, name='mark audition'),
-    path('player', main.Player, name='player'),
-    path('author', main.Author, name='author'),
-    path('search', main.Search, name='search'),
-    path('login', cabinet.Login, name='login'),
-    path('registration', cabinet.Registration, name='registration'),
-    path('cabinet', cabinet.Cabinet, name='cabinet'),
+    path('api/', include(musicRouter.urls)),
+    path('api/auditions/', main.AuditionsListAPIView.as_view(), name='auditions'),
+    path('api/audition/', main.AuditionsListAPIView.as_view(), name='audition'),
+    path('api/like/', main.Like, name='like'),
+    path('api/player/', main.PlayerAPIView.as_view(), name='player'),
+    path('player/', main.Player, name='player'),
+    path('author/', main.Author, name='author'),
+    path('search/', main.Search, name='search'),
+    path('login/', cabinet.Login, name='login'),
+    path('registration/', cabinet.Registration, name='registration'),
+    path('cabinet/', cabinet.Cabinet, name='cabinet'),
 ]
 
 handler404 = 'main.views.Page_not_found'

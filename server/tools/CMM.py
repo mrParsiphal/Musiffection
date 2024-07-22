@@ -16,7 +16,7 @@ def login():
         password = DATABASES['default']['PASSWORD']
         database = DATABASES['default']['NAME']
     except Exception:
-        print((italic("Подключение к базе данных")))
+        print((italic(red("Не удалось использовать данные пользователя из файла settings.py!"))))
         host = input('Введите адресс БД: ')
         database = input('Введите название БД: ')
         user = input('Введите пользователя: ')
@@ -55,9 +55,7 @@ def Cleanup_migrations():
 if __name__ == '__main__':
     print(italic(red('Вы уверенны, что хотите очистить всю базу данных и все миграции???')))
     answer = input(italic('(Y/N): '))
-    if answer in ('Y', 'y'):
-        print(italic('Запуск программы'))
+    if answer.lower() == 'y':
         database, cur = login()
         Cleanup_mysql(database, cur)
         Cleanup_migrations()
-

@@ -2,12 +2,13 @@
     let current_position = 0;
 	var number_position = new String;
 	var time_check_once = false;
-	var musics
-	var len_musics
+	var player_music_id = {{ first_music }};
+	var musics;
+	var len_musics;
 
     const url = window.location.href;
 
-	const csrf = '{{ csrf_token }}'
+	const csrf = '{{ csrf_token }}';
     const play = document.getElementById("play");
 	const pause = document.getElementById("pause");
 	const audio = document.getElementById("audio");
@@ -32,22 +33,18 @@
     const player_content = document.getElementById("player_content");
 	const playlist = document.getElementById("playlist");
 
-    audio.volume = 0.04;
-    const time_check = 40;
+    audio.volume = 0.15;
 
 
     async function Load_music(music_id) {
-		let response = await fetch("/player?m=" + music_id, {
-			method: 'POST',
+		let response = await fetch("/api/player?format=json&n=" + music_id, {
+			method: 'GET',
 			headers: {
 				'X-CSRFToken': csrf,
 			},
-			body: '',
 		});
 		musics = await response.json();
 		len_musics = musics.length;
-
-
 
 		audio.src = "/static/musics/" + musics.track_0.file;
 		music_img.src = "/static/" + musics.track_0.img;
@@ -65,23 +62,23 @@
 			document.getElementById("music_li_duration_" + i).textContent = musics["track_" + i].duration;
 		}
 		document.getElementById("number_0").style.background = '#00648F';
-		body.style.overflow = 'hidden';
-        history.pushState(null, null, 'player');
-        player_content.style.visibility = 'visible';
-		player_content.style.opacity = '1';
+		player_music_id = music_id;
+        change_player_visibility();
 		current_position = 0;
 		audio.play();
+		Set_quantity_auditions(current_position);
 	};
 
-    async function change_player_visibility() {
+    async function change_player_visibility(music_id = null) {
         if (player_content.style.visibility == 'collapse') {
-            history.pushState(null, null, 'player');
+			history.pushState(null, null, 'player?m=' + player_music_id);
 			player_content.style.opacity = '1';
             player_content.style.visibility = 'visible';
             body.style.overflow = 'hidden';
         } else {
 			player_content.style.opacity = '0';
-			setTimeout(function() {player_content.style.visibility = 'collapse'; history.back();}, 400);
+			setTimeout(function() {player_content.style.visibility = 'collapse';}, 400);
+			history.back();
             body.style.overflow = 'visible';
         };
     };
@@ -97,13 +94,12 @@
             if (duration > 0 && !audio.paused) {
 				let percent_duration = Math.round((audio.currentTime / duration) * 100)
                 current_time.textContent = 'current_time: ' + percent_duration + "%";
-				if ((percent_duration == time_check) && (time_check_once == false)) {
-					Set_audition(current_position);
-					time_check_once = true;
-				};
                 progress_amount.style.width = (audio.currentTime / duration) * 100 + "%";
             }
         });
+		if (player_music_id) {
+			Load_music(player_music_id);
+		};
     };
 
 	progress_click.onmousedown = function (e) {
@@ -196,7 +192,7 @@
 	}
 
 	async function Set_audition(current_position) {
-		let response = await fetch("/player/mark audition", {
+		let response = await fetch("/api/auditions", {
 			method: 'POST',
 			headers: {
 				'music-id': musics["track_" + current_position].id,
@@ -207,7 +203,7 @@
 	}
 
 	async function Set_rating(current_position, rating) {
-		let response = await fetch("/player/like", {
+		let response = await fetch("/api/audition/", {
 			method: 'POST',
 			headers: {
 				'music-id': musics["track_" + current_position].id,
@@ -217,7 +213,6 @@
 			body: '',
 		});
 		let result = await response.json();
-		musics[current_position].rating = result.rating;
 		rating_counter.textContent = 'rating: ' + result.rating;
 	}
 
@@ -226,8 +221,8 @@
 	});
 
 	async function Set_quantity_auditions(position) {
-		let response = await fetch("/player/auditions", {
-			method: 'POST',
+		let response = await fetch("/api/auditions/", {
+			method: 'UPDATE',
 			headers: {
 				'music-id': musics["track_" + position].id,
 				'X-CSRFToken': csrf,

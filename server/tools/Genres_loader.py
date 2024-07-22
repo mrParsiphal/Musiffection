@@ -25,7 +25,7 @@ def login():
         database=database)
     print(italic(green('Подключение успешно')))
     cur = db.cursor()
-    table = 'main_genres'
+    table = 'main_genreModel'
     return db, cur, table
 
 
