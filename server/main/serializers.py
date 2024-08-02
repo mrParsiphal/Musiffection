@@ -1,5 +1,5 @@
 from rest_framework import serializers
-import mutagen
+
 
 from .models import MusicModel, AuditionModel
 
@@ -15,10 +15,6 @@ class MusicSerializer(serializers.ModelSerializer):
             validated_data['text'] = None
         validated_data['auditions'] = 0
         validated_data['rating'] = 0
-        mutagen_data = mutagen.File('../musics files/musics/' + validated_data['file'])
-        sec_dur = mutagen_data.info.length
-        validated_data['duration'] = (f'{int(sec_dur // 60)}'.rjust(2, '0') +
-                                      ':' + f'{int(sec_dur % 60)}'.rjust(2, '0'))
         return MusicModel.objects.create(**validated_data)
 
     def update(self, instance, validated_data):

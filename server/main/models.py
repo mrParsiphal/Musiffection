@@ -32,7 +32,7 @@ class MusicModel(models.Model):
     author = models.CharField(default='неизвестен', max_length=100, verbose_name='Автор')
     owner = models.ForeignKey(UserProfile, verbose_name='Владелец', on_delete=models.SET_NULL, null=True, blank=True)
     text = models.TextField(default=None, verbose_name='Слова песни', null=True, blank=True)
-    duration = models.CharField(max_length=7, verbose_name='Длительность')
+    duration = models.CharField(max_length=7, verbose_name='Длительность', null=True, blank=True)
     tegs = models.ManyToManyField(TegModel, verbose_name='Теги', blank=True)
     genres = models.ManyToManyField(GenreModel, verbose_name='жанры', blank=True)
     rating = models.IntegerField(default=0, verbose_name='Репутация')
